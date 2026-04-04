@@ -48,7 +48,11 @@ export default function ExploreScreen() {
         <Text className="font-manrope text-2xl font-black text-primary tracking-tighter">
           PlotRent
         </Text>
-        <Pressable className="p-2 rounded-full active:bg-surface-container-high">
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Notifications"
+          className="p-2 rounded-full active:bg-surface-container-high"
+        >
           <Bell color="#32632e" size={24} />
         </Pressable>
       </View>
@@ -79,6 +83,9 @@ export default function ExploreScreen() {
               onPress={() =>
                 setActiveFilter(activeFilter === chip ? null : chip)
               }
+              accessibilityRole="button"
+              accessibilityLabel={`Filter by ${chip}`}
+              accessibilityState={{ selected: activeFilter === chip }}
               className={`px-5 py-2.5 rounded-full ${
                 activeFilter === chip
                   ? "bg-primary"

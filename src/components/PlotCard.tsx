@@ -18,6 +18,9 @@ export default function PlotCard({ plot, onPress, index = 0 }: PlotCardProps) {
     <AnimatedPressable
       entering={FadeInDown.delay(index * 100).duration(400).springify()}
       onPress={() => onPress(plot.id)}
+      accessibilityRole="button"
+      accessibilityLabel={`${plot.title}, €${plot.price_per_month} per month, ${plot.size_sqm} square meters${plot.rating != null ? `, rated ${plot.rating.toFixed(1)} stars` : ""}${plot.instant_book ? ", instant book available" : ""}`}
+      accessibilityHint="Double tap to view plot details"
       className="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm active:opacity-90"
     >
       {/* Image */}
@@ -27,9 +30,10 @@ export default function PlotCard({ plot, onPress, index = 0 }: PlotCardProps) {
             source={{ uri: imageUri }}
             className="w-full h-full"
             resizeMode="cover"
+            accessibilityLabel={`Photo of ${plot.title}`}
           />
         ) : (
-          <View className="w-full h-full items-center justify-center">
+          <View className="w-full h-full items-center justify-center" accessibilityElementsHidden>
             <MapPin color="#7a757f" size={32} />
           </View>
         )}

@@ -233,7 +233,11 @@ export default function ChatScreen() {
         className="bg-surface/95 border-t border-outline-variant/10 px-4 pt-3 flex-row items-center gap-3"
         style={{ paddingBottom: insets.bottom + 8 }}
       >
-        <Pressable className="w-11 h-11 items-center justify-center bg-surface-container-high rounded-full active:bg-surface-container-highest">
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Send a photo"
+          className="w-11 h-11 items-center justify-center bg-surface-container-high rounded-full active:bg-surface-container-highest"
+        >
           <Camera color="#49454f" size={22} />
         </Pressable>
         <TextInput
@@ -241,6 +245,7 @@ export default function ChatScreen() {
           onChangeText={setInput}
           placeholder={`Message ${partnerFirstName}...`}
           placeholderTextColor="#7a757f"
+          accessibilityLabel={`Type a message to ${partnerFirstName}`}
           className="flex-1 bg-surface-container-low rounded-full py-3 px-5 text-sm font-inter font-medium text-on-surface"
           returnKeyType="send"
           onSubmitEditing={handleSend}
@@ -248,6 +253,8 @@ export default function ChatScreen() {
         />
         <Pressable
           onPress={handleSend}
+          accessibilityRole="button"
+          accessibilityLabel="Send message"
           className="w-11 h-11 items-center justify-center bg-primary rounded-full shadow-md active:opacity-90"
         >
           <Send color="#ffffff" size={18} />

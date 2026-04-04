@@ -130,6 +130,8 @@ export default function Onboarding() {
           <Animated.View style={buttonsStyle} className="gap-4 mb-8">
             <AnimatedPressable
               onPress={() => router.push("/(tabs)")}
+              accessibilityRole="button"
+              accessibilityLabel="I want to grow — find garden plots to rent"
               className="h-16 rounded-full bg-primary flex-row items-center justify-center gap-3 shadow-2xl active:opacity-90"
             >
               <Sprout color="#ffffff" size={24} />
@@ -140,6 +142,8 @@ export default function Onboarding() {
 
             <AnimatedPressable
               onPress={() => router.push("/(tabs)")}
+              accessibilityRole="button"
+              accessibilityLabel="I have land to share — list your garden plots"
               className="h-16 rounded-full bg-secondary flex-row items-center justify-center gap-3 shadow-xl active:opacity-90"
             >
               <Mountain color="#ffffff" size={24} />

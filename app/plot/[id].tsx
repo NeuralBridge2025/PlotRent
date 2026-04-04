@@ -107,15 +107,25 @@ export default function PlotDetailsScreen() {
       >
         <Pressable
           onPress={() => router.back()}
+          accessibilityRole="button"
+          accessibilityLabel="Go back"
           className="w-10 h-10 rounded-full bg-white/80 items-center justify-center"
         >
           <ArrowLeft color="#32632e" size={22} />
         </Pressable>
         <View className="flex-row gap-2">
-          <Pressable className="w-10 h-10 rounded-full bg-white/80 items-center justify-center">
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Share this plot"
+            className="w-10 h-10 rounded-full bg-white/80 items-center justify-center"
+          >
             <Share2 color="#32632e" size={20} />
           </Pressable>
-          <Pressable className="w-10 h-10 rounded-full bg-white/80 items-center justify-center">
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Save to favourites"
+            className="w-10 h-10 rounded-full bg-white/80 items-center justify-center"
+          >
             <Heart color="#32632e" size={20} />
           </Pressable>
         </View>
@@ -341,6 +351,8 @@ export default function PlotDetailsScreen() {
           onPress={() =>
             router.push({ pathname: "/booking", params: { plotId: plot.id } })
           }
+          accessibilityRole="button"
+          accessibilityLabel={`Book ${plot.title} for €${plot.price_per_month} per month`}
           className="bg-primary px-8 py-4 rounded-full shadow-lg active:opacity-90"
         >
           <Text className="font-manrope font-bold text-lg text-white">

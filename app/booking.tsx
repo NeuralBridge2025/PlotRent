@@ -219,6 +219,8 @@ export default function BookingReviewScreen() {
                   onValueChange={setInsurance}
                   trackColor={{ false: "#cac4cf", true: "#32632e" }}
                   thumbColor="#ffffff"
+                  accessibilityLabel="Insurance add-on, covers crop damage and theft"
+                  accessibilityRole="switch"
                 />
               </View>
             </View>
