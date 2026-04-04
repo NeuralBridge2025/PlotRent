@@ -1,17 +1,22 @@
 import { View, Text, Pressable, Image } from "react-native";
+import Animated, { FadeInDown } from "react-native-reanimated";
 import { Ruler, MapPin, Star } from "lucide-react-native";
 import type { Plot } from "@/types";
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 interface PlotCardProps {
   plot: Plot;
   onPress: (id: string) => void;
+  index?: number;
 }
 
-export default function PlotCard({ plot, onPress }: PlotCardProps) {
+export default function PlotCard({ plot, onPress, index = 0 }: PlotCardProps) {
   const imageUri = plot.images?.[0];
 
   return (
-    <Pressable
+    <AnimatedPressable
+      entering={FadeInDown.delay(index * 100).duration(400).springify()}
       onPress={() => onPress(plot.id)}
       className="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm active:opacity-90"
     >
@@ -105,6 +110,6 @@ export default function PlotCard({ plot, onPress }: PlotCardProps) {
           </View>
         )}
       </View>
-    </Pressable>
+    </AnimatedPressable>
   );
 }

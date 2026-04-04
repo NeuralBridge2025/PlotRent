@@ -7,6 +7,7 @@ import {
   Image,
   Alert,
 } from "react-native";
+import Animated, { FadeInDown, FadeIn } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import {
@@ -139,7 +140,10 @@ export default function ProfileScreen() {
         contentContainerStyle={{ paddingBottom: 100 }}
       >
         {/* Profile Header */}
-        <View className="items-center pt-6 pb-8 px-6">
+        <Animated.View
+          entering={FadeIn.duration(600)}
+          className="items-center pt-6 pb-8 px-6"
+        >
           {/* Avatar */}
           <View className="relative mb-4">
             <View className="w-28 h-28 rounded-full bg-primary p-0.5">
@@ -178,7 +182,7 @@ export default function ProfileScreen() {
               </Text>
             </View>
           </View>
-        </View>
+        </Animated.View>
 
         {/* Active Rentals */}
         <View className="px-6 mb-8">
@@ -211,7 +215,10 @@ export default function ProfileScreen() {
         </View>
 
         {/* Garden Achievements */}
-        <View className="px-6 mb-8">
+        <Animated.View
+          entering={FadeInDown.delay(200).duration(500).springify()}
+          className="px-6 mb-8"
+        >
           <Text className="font-manrope font-extrabold text-2xl tracking-tight text-on-surface mb-4">
             Garden Achievements
           </Text>
@@ -246,7 +253,7 @@ export default function ProfileScreen() {
               </Text>
             </View>
           </View>
-        </View>
+        </Animated.View>
 
         {/* Settings Menu */}
         <View className="px-6 mb-4">

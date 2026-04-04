@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   RefreshControl,
 } from "react-native";
+import Animated, { FadeInDown, FadeInRight } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import {
@@ -177,17 +178,23 @@ export default function HostDashboardScreen() {
         }
       >
         {/* Greeting */}
-        <View className="px-6 mt-4 mb-6">
+        <Animated.View
+          entering={FadeInDown.duration(500)}
+          className="px-6 mt-4 mb-6"
+        >
           <Text className="font-manrope font-bold text-3xl tracking-tight text-primary">
             Hi, {firstName}!
           </Text>
           <Text className="font-inter text-base text-on-surface-variant mt-1">
             Your garden plots are thriving today.
           </Text>
-        </View>
+        </Animated.View>
 
         {/* Earnings Card */}
-        <View className="px-6 mb-6">
+        <Animated.View
+          entering={FadeInDown.delay(150).duration(500).springify()}
+          className="px-6 mb-6"
+        >
           <View className="bg-primary rounded-3xl p-7 overflow-hidden">
             {/* Decorative circle */}
             <View className="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-white/5" />
@@ -233,10 +240,13 @@ export default function HostDashboardScreen() {
               </View>
             </View>
           </View>
-        </View>
+        </Animated.View>
 
         {/* Host Insights Card */}
-        <View className="px-6 mb-8">
+        <Animated.View
+          entering={FadeInDown.delay(300).duration(500).springify()}
+          className="px-6 mb-8"
+        >
           <View className="bg-surface-container-lowest rounded-3xl p-6 shadow-sm">
             <Text className="font-manrope font-bold text-xl mb-2">
               Host Insights
@@ -260,7 +270,7 @@ export default function HostDashboardScreen() {
               <Sparkles color="#ffffff" size={16} />
             </Pressable>
           </View>
-        </View>
+        </Animated.View>
 
         {/* Your Plots Section */}
         <View className="mb-8">

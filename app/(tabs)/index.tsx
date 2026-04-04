@@ -150,10 +150,11 @@ export default function ExploreScreen() {
           </View>
         ) : (
           <View className="px-6 gap-6">
-            {plots.map((plot) => (
+            {plots.map((plot, index) => (
               <PlotCard
                 key={plot.id}
                 plot={plot}
+                index={index}
                 onPress={handlePlotPress}
               />
             ))}

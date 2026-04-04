@@ -37,7 +37,7 @@
 - [x] **6.5** Push notifications setup
 
 ## Phase 7: Polish
-- [ ] **7.1** Animations (reanimated entrance/exit)
+- [x] **7.1** Animations (reanimated entrance/exit)
 - [ ] **7.2** Error boundaries & offline handling
 - [ ] **7.3** Accessibility (a11y labels, contrast)
 - [ ] **7.4** Performance (image caching, list virtualization)
