@@ -20,7 +20,7 @@
 ## Phase 4: Profile & Services
 - [x] **4.1** Profile screen (`app/(tabs)/profile.tsx`)
 - [x] **4.2** Services marketplace screen (`app/services.tsx`)
-- [ ] **4.3** Role selection screen (`app/role-select.tsx`)
+- [x] **4.3** Role selection screen (`app/role-select.tsx`)
 
 ## Phase 5: Services & Hooks Layer
 - [ ] **5.1** Plot service + usePlots hook
