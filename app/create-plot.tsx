@@ -8,6 +8,7 @@ import {
   Switch,
   ActivityIndicator,
   Alert,
+  Image,
 } from "react-native";
 import { router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -16,9 +17,12 @@ import {
   Camera,
   MapPin,
   Check,
+  X,
+  Plus,
 } from "lucide-react-native";
 import { useAuth } from "@/contexts/AuthContext";
 import { createPlot } from "@/services/plotService";
+import { pickImage, uploadPlotImage } from "@/services/imageService";
 
 const SOIL_TYPES = ["Loamy", "Clay", "Sandy", "Silty", "Peaty", "Chalky"];
 const SUN_OPTIONS = ["Full Sun", "Partial Shade", "Full Shade"];
@@ -125,7 +129,24 @@ export default function CreatePlotScreen() {
   const [sunExposure, setSunExposure] = useState<string | null>(null);
   const [utilities, setUtilities] = useState<string[]>([]);
   const [instantBook, setInstantBook] = useState(false);
+  const [imageUris, setImageUris] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleAddImage = useCallback(async () => {
+    try {
+      const uri = await pickImage();
+      if (uri) {
+        setImageUris((prev) => [...prev, uri]);
+      }
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Failed to pick image";
+      Alert.alert("Error", message);
+    }
+  }, []);
+
+  const handleRemoveImage = useCallback((index: number) => {
+    setImageUris((prev) => prev.filter((_, i) => i !== index));
+  }, []);
 
   const toggleUtility = useCallback((utility: string) => {
     setUtilities((prev) =>
@@ -159,6 +180,13 @@ export default function CreatePlotScreen() {
 
     setIsSubmitting(true);
     try {
+      // Upload images to Supabase Storage
+      const uploadedUrls: string[] = [];
+      for (const uri of imageUris) {
+        const url = await uploadPlotImage(user.id, uri);
+        uploadedUrls.push(url);
+      }
+
       await createPlot({
         host_id: user.id,
         title: title.trim(),
@@ -173,7 +201,7 @@ export default function CreatePlotScreen() {
         soil_type: soilType,
         sun_exposure: sunExposure,
         utilities: utilities.length > 0 ? utilities : null,
-        images: [], // Image upload handled separately in Phase 6.4
+        images: uploadedUrls,
         instant_book: instantBook,
       });
 
@@ -200,6 +228,7 @@ export default function CreatePlotScreen() {
     sunExposure,
     utilities,
     instantBook,
+    imageUris,
   ]);
 
   return (
@@ -225,16 +254,50 @@ export default function CreatePlotScreen() {
         contentContainerStyle={{ paddingBottom: insets.bottom + 24, paddingTop: 20 }}
         keyboardShouldPersistTaps="handled"
       >
-        {/* Image Upload Placeholder */}
-        <Pressable className="h-40 bg-surface-container-low rounded-2xl border-2 border-dashed border-outline-variant/40 items-center justify-center mb-6 active:bg-surface-container">
-          <Camera color="#7a757f" size={32} />
-          <Text className="font-inter text-sm text-on-surface-variant mt-2">
-            Add Photos
-          </Text>
-          <Text className="font-inter text-xs text-outline mt-1">
-            Coming soon — images can be added later
-          </Text>
-        </Pressable>
+        {/* Image Upload */}
+        <View className="mb-6">
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ gap: 12 }}
+          >
+            {imageUris.map((uri, index) => (
+              <View key={uri} className="w-32 h-32 rounded-2xl overflow-hidden">
+                <Image
+                  source={{ uri }}
+                  className="w-full h-full"
+                  resizeMode="cover"
+                />
+                <Pressable
+                  onPress={() => handleRemoveImage(index)}
+                  className="absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-black/60 items-center justify-center"
+                >
+                  <X color="#ffffff" size={14} />
+                </Pressable>
+              </View>
+            ))}
+            <Pressable
+              onPress={handleAddImage}
+              className="w-32 h-32 bg-surface-container-low rounded-2xl border-2 border-dashed border-outline-variant/40 items-center justify-center active:bg-surface-container"
+            >
+              {imageUris.length === 0 ? (
+                <>
+                  <Camera color="#7a757f" size={28} />
+                  <Text className="font-inter text-xs text-on-surface-variant mt-1.5">
+                    Add Photos
+                  </Text>
+                </>
+              ) : (
+                <>
+                  <Plus color="#7a757f" size={24} />
+                  <Text className="font-inter text-[10px] text-on-surface-variant mt-1">
+                    More
+                  </Text>
+                </>
+              )}
+            </Pressable>
+          </ScrollView>
+        </View>
 
         {/* Basic Info */}
         <Text className="font-manrope font-bold text-lg text-on-surface mb-4">
