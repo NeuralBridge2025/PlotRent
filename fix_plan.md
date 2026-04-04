@@ -30,7 +30,7 @@
 - [x] **5.5** Host service + useHostDashboard hook
 
 ## Phase 6: Backend & Integration
-- [ ] **6.1** Supabase migrations (tables, RLS policies)
+- [x] **6.1** Supabase migrations (tables, RLS policies)
 - [ ] **6.2** Seed data
 - [ ] **6.3** Stripe Connect edge functions
 - [ ] **6.4** Image upload via Supabase Storage
