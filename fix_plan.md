@@ -10,7 +10,7 @@
 - [x] **2.1** Tab navigator layout (`app/(tabs)/_layout.tsx`)
 - [x] **2.2** Explore screen — plot cards grid + filter bar
 - [x] **2.3** Plot Details screen (`app/plot/[id].tsx`)
-- [ ] **2.4** Booking Review screen (`app/booking.tsx`)
+- [x] **2.4** Booking Review screen (`app/booking.tsx`)
 
 ## Phase 3: Host & Communication
 - [ ] **3.1** Host Dashboard screen (`app/(tabs)/host.tsx`)
