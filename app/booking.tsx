@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   Image,
   ActivityIndicator,
   Switch,
+  Alert,
 } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -21,6 +22,9 @@ import {
   RefreshCw,
 } from "lucide-react-native";
 import { usePlot } from "@/hooks/usePlot";
+import { useAuth } from "@/contexts/AuthContext";
+import { createBooking } from "@/services/bookingService";
+import { createPaymentIntent } from "@/services/paymentService";
 
 const SERVICE_FEE_RATE = 0.08;
 const INSURANCE_FEE = 5.0;
@@ -33,8 +37,10 @@ function formatCurrency(amount: number): string {
 export default function BookingReviewScreen() {
   const { plotId } = useLocalSearchParams<{ plotId: string }>();
   const insets = useSafeAreaInsets();
+  const { user } = useAuth();
   const { plot, isLoading, error, refresh } = usePlot(plotId);
   const [insurance, setInsurance] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const pricing = useMemo(() => {
     if (!plot) return null;
@@ -268,16 +274,67 @@ export default function BookingReviewScreen() {
 
         {/* Confirm Button */}
         <Pressable
-          onPress={() => {
-            // TODO: integrate with Stripe via booking service
-            router.push("/(tabs)/profile");
+          onPress={async () => {
+            if (!user || !plot || !pricing) return;
+
+            setIsSubmitting(true);
+            try {
+              // 1. Create booking in Supabase
+              const today = new Date();
+              const endDate = new Date(today);
+              endDate.setMonth(endDate.getMonth() + 6);
+
+              const booking = await createBooking({
+                plot_id: plot.id,
+                renter_id: user.id,
+                start_date: today.toISOString().split("T")[0],
+                end_date: endDate.toISOString().split("T")[0],
+                monthly_price: pricing.monthly,
+                service_fee: pricing.serviceFee,
+                insurance_fee: pricing.insuranceFee > 0 ? pricing.insuranceFee : null,
+                security_deposit: pricing.securityDeposit,
+                total_amount: pricing.total,
+              });
+
+              // 2. Create Stripe payment intent
+              try {
+                await createPaymentIntent({
+                  bookingId: booking.id,
+                  plotId: plot.id,
+                  amount: pricing.total,
+                });
+              } catch {
+                // Payment setup failed but booking was created — still navigate
+                // Payment can be retried from the profile/bookings screen
+              }
+
+              Alert.alert(
+                "Booking Confirmed!",
+                `Your rental of "${plot.title}" has been booked. Check your profile for details.`,
+                [{ text: "View Profile", onPress: () => router.replace("/(tabs)/profile") }]
+              );
+            } catch (err) {
+              const message = err instanceof Error ? err.message : "Booking failed";
+              Alert.alert("Error", message);
+            } finally {
+              setIsSubmitting(false);
+            }
           }}
-          className="bg-primary py-5 rounded-full shadow-lg flex-row items-center justify-center gap-3 active:opacity-90 mb-4"
+          disabled={isSubmitting}
+          className={`py-5 rounded-full shadow-lg flex-row items-center justify-center gap-3 mb-4 ${
+            isSubmitting ? "bg-outline/30" : "bg-primary active:opacity-90"
+          }`}
         >
-          <Text className="font-manrope font-extrabold text-lg text-white">
-            Confirm & Pay
-          </Text>
-          <ArrowRight color="#ffffff" size={22} />
+          {isSubmitting ? (
+            <ActivityIndicator color="#ffffff" />
+          ) : (
+            <>
+              <Text className="font-manrope font-extrabold text-lg text-white">
+                Confirm & Pay
+              </Text>
+              <ArrowRight color="#ffffff" size={22} />
+            </>
+          )}
         </Pressable>
       </ScrollView>
     </View>

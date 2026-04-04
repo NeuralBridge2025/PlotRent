@@ -32,7 +32,7 @@
 ## Phase 6: Backend & Integration
 - [x] **6.1** Supabase migrations (tables, RLS policies)
 - [x] **6.2** Seed data
-- [ ] **6.3** Stripe Connect edge functions
+- [x] **6.3** Stripe Connect edge functions
 - [ ] **6.4** Image upload via Supabase Storage
 - [ ] **6.5** Push notifications setup
 
