@@ -1,6 +1,8 @@
 import { supabase } from "@/lib/supabase";
-import type { PlotRow } from "@/lib/database.types";
+import type { PlotRow, Database } from "@/lib/database.types";
 import type { Plot, PlotFilters } from "@/types";
+
+type PlotInsert = Database["public"]["Tables"]["plots"]["Insert"];
 
 /**
  * Fetch active plots, optionally filtered.
@@ -59,6 +61,20 @@ export async function fetchPlots(filters?: PlotFilters): Promise<Plot[]> {
       host_avatar: profile?.avatar_url ?? undefined,
     } as Plot;
   });
+}
+
+/**
+ * Create a new plot listing.
+ */
+export async function createPlot(plot: PlotInsert): Promise<PlotRow> {
+  const { data, error } = await supabase
+    .from("plots")
+    .insert(plot)
+    .select("*")
+    .single();
+
+  if (error) throw error;
+  return data;
 }
 
 /**
