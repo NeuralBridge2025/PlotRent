@@ -3,6 +3,8 @@ import { StatusBar } from "expo-status-bar";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ToastProvider } from "@/contexts/ToastContext";
 import { useNotifications } from "@/hooks/useNotifications";
+import ErrorBoundary from "@/components/ErrorBoundary";
+import OfflineBanner from "@/components/OfflineBanner";
 
 function RootNavigator() {
   useNotifications();
@@ -10,6 +12,7 @@ function RootNavigator() {
   return (
     <>
       <StatusBar style="dark" />
+      <OfflineBanner />
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="index" />
         <Stack.Screen name="role-select" />
@@ -26,10 +29,12 @@ function RootNavigator() {
 
 export default function RootLayout() {
   return (
-    <AuthProvider>
-      <ToastProvider>
-        <RootNavigator />
-      </ToastProvider>
-    </AuthProvider>
+    <ErrorBoundary>
+      <AuthProvider>
+        <ToastProvider>
+          <RootNavigator />
+        </ToastProvider>
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }
