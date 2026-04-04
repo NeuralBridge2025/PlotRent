@@ -23,11 +23,11 @@
 - [x] **4.3** Role selection screen (`app/role-select.tsx`)
 
 ## Phase 5: Services & Hooks Layer
-- [ ] **5.1** Plot service + usePlots hook
-- [ ] **5.2** Booking service + useBooking hook
-- [ ] **5.3** Message service + useMessages hook
-- [ ] **5.4** Auth service (integrated in context)
-- [ ] **5.5** Host service + useHostDashboard hook
+- [x] **5.1** Plot service + usePlots hook
+- [x] **5.2** Booking service + useBooking hook
+- [x] **5.3** Message service + useMessages hook
+- [x] **5.4** Auth service (integrated in context)
+- [x] **5.5** Host service + useHostDashboard hook
 
 ## Phase 6: Backend & Integration
 - [ ] **6.1** Supabase migrations (tables, RLS policies)
