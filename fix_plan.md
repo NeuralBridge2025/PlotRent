@@ -18,7 +18,7 @@
 - [x] **3.3** Create Plot screen (`app/create-plot.tsx`)
 
 ## Phase 4: Profile & Services
-- [ ] **4.1** Profile screen (`app/(tabs)/profile.tsx`)
+- [x] **4.1** Profile screen (`app/(tabs)/profile.tsx`)
 - [ ] **4.2** Services marketplace screen (`app/services.tsx`)
 - [ ] **4.3** Role selection screen (`app/role-select.tsx`)
 
