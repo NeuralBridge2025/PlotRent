@@ -14,7 +14,7 @@
 
 ## Phase 3: Host & Communication
 - [x] **3.1** Host Dashboard screen (`app/(tabs)/host.tsx`)
-- [ ] **3.2** Chat screen (`app/chat/[id].tsx`)
+- [x] **3.2** Chat screen (`app/chat/[id].tsx`)
 - [ ] **3.3** Create Plot screen (`app/create-plot.tsx`)
 
 ## Phase 4: Profile & Services
