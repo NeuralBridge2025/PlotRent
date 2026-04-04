@@ -1,0 +1,102 @@
+appId: com.plotrent.app
+name: "Journey 2: Host Plot Creation"
+tags:
+  - host
+  - create-plot
+  - critical
+---
+# ── Auth: Launch and sign in as host ──
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible:
+        id: "onboarding-screen"
+    timeout: 30000
+- openLink: "plotrent://dev-login?email=host1@plotrent.dev&password=password123"
+- tapOn:
+    text: "Open"
+    optional: true
+- waitForAnimationToEnd:
+    timeout: 10000
+
+# ── Navigate to Listings tab ──
+- tapOn:
+    point: "35%,93%"
+- waitForAnimationToEnd:
+    timeout: 5000
+- extendedWaitUntil:
+    visible: "Your Plots"
+    timeout: 10000
+
+# ── Tap FAB to create plot ──
+- tapOn:
+    id: "host-fab-create-plot"
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible: "List Your Plot"
+
+# ── Fill form ──
+- tapOn:
+    id: "create-plot-title-input"
+- inputText: "Maestro Test Garden"
+- tapOn:
+    id: "create-plot-description-input"
+- inputText: "A beautiful test plot created by Maestro E2E tests"
+- tapOn:
+    id: "create-plot-price-input"
+- inputText: "50"
+- tapOn:
+    id: "create-plot-size-input"
+- inputText: "30"
+
+# ── Location ──
+- scrollUntilVisible:
+    element:
+        id: "create-plot-address-input"
+    direction: DOWN
+- tapOn:
+    id: "create-plot-address-input"
+- inputText: "Rua Maestro Test 1"
+- tapOn:
+    id: "create-plot-city-input"
+- inputText: "Lisbon"
+
+# ── Dismiss keyboard before scrolling ──
+- hideKeyboard
+- waitForAnimationToEnd
+
+# ── Plot details chips ──
+- scrollUntilVisible:
+    element: "Loamy"
+    direction: DOWN
+- tapOn: "Loamy"
+- tapOn: "Full Sun"
+- scrollUntilVisible:
+    element: "Water Access"
+    direction: DOWN
+- tapOn: "Water Access"
+- tapOn: "Toolshed"
+
+# ── Instant book ──
+- scrollUntilVisible:
+    element:
+        id: "create-plot-instant-book-switch"
+    direction: DOWN
+- tapOn:
+    id: "create-plot-instant-book-switch"
+
+# ── Publish ──
+- scrollUntilVisible:
+    element:
+        id: "create-plot-publish-button"
+    direction: DOWN
+- tapOn:
+    id: "create-plot-publish-button"
+- waitForAnimationToEnd:
+    timeout: 15000
+- assertVisible:
+    text: "Plot Listed!"
+    optional: true
+- tapOn:
+    text: "View Dashboard"
+    optional: true

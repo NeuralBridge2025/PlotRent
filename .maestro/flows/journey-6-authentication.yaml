@@ -1,0 +1,156 @@
+appId: com.plotrent.app
+name: "Journey 6: Authentication Flow"
+tags:
+  - auth
+  - sign-in
+  - critical
+---
+# ══════════════════════════════════════════
+# Test 1: Sign in with valid credentials
+# ══════════════════════════════════════════
+- launchApp:
+    clearState: true
+- waitForAnimationToEnd:
+    timeout: 3000
+
+# ── Navigate to Profile tab ──
+- tapOn: "Profile"
+- waitForAnimationToEnd:
+    timeout: 3000
+
+# ── Verify unauthenticated state ──
+- assertVisible: "Join PlotRent"
+- assertVisible: "Sign in to manage your plots and bookings."
+
+# ── Tap Sign In ──
+- tapOn: "Sign In"
+- waitForAnimationToEnd:
+    timeout: 3000
+
+# ── Verify sign-in screen ──
+- assertVisible: "Welcome Back"
+- assertVisible: "Sign in to your account."
+
+# ── Enter valid renter credentials ──
+- tapOn:
+    id: "sign-in-email-input"
+- inputText: "renter1@plotrent.dev"
+- tapOn:
+    id: "sign-in-password-input"
+- inputText: "password123"
+- tapOn:
+    id: "sign-in-submit-button"
+- waitForAnimationToEnd:
+    timeout: 10000
+
+# ── Verify signed in — navigate to Profile to check ──
+- tapOn: "Profile"
+- waitForAnimationToEnd:
+    timeout: 5000
+- extendedWaitUntil:
+    visible: "Ana Costa"
+    timeout: 10000
+
+# ══════════════════════════════════════════
+# Test 2: Sign out and verify redirect
+# ══════════════════════════════════════════
+- scrollUntilVisible:
+    element:
+        id: "profile-sign-out"
+    direction: DOWN
+- tapOn:
+    id: "profile-sign-out"
+- waitForAnimationToEnd
+- tapOn:
+    text: "Sign Out"
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible: "Find your patch"
+
+# ══════════════════════════════════════════
+# Test 3: Sign in with invalid credentials
+# ══════════════════════════════════════════
+
+# ── Navigate to Profile tab ──
+- tapOn: "Profile"
+- waitForAnimationToEnd:
+    timeout: 3000
+- tapOn: "Sign In"
+- waitForAnimationToEnd:
+    timeout: 3000
+
+# ── Enter wrong password ──
+- tapOn:
+    id: "sign-in-email-input"
+- inputText: "renter1@plotrent.dev"
+- tapOn:
+    id: "sign-in-password-input"
+- inputText: "wrongpassword"
+- tapOn:
+    id: "sign-in-submit-button"
+- waitForAnimationToEnd:
+    timeout: 5000
+
+# ── Verify error is shown ──
+- assertVisible:
+    id: "sign-in-error"
+
+# ══════════════════════════════════════════
+# Test 4: Validation — empty fields
+# ══════════════════════════════════════════
+
+# ── Go back and re-open sign in to clear fields ──
+- pressKey: back
+- waitForAnimationToEnd:
+    timeout: 2000
+- tapOn: "Sign In"
+- waitForAnimationToEnd:
+    timeout: 3000
+
+# ── Submit without filling anything ──
+- tapOn:
+    id: "sign-in-submit-button"
+- waitForAnimationToEnd:
+    timeout: 2000
+- assertVisible: "Please fill in all fields."
+
+# ══════════════════════════════════════════
+# Test 5: Toggle to Sign Up mode
+# ══════════════════════════════════════════
+- tapOn:
+    id: "sign-in-toggle-mode"
+- waitForAnimationToEnd:
+    timeout: 2000
+- assertVisible: "Join PlotRent"
+- assertVisible: "Create an account to get started."
+- assertVisible:
+    id: "sign-in-name-input"
+
+# ── Toggle back to Sign In ──
+- tapOn:
+    id: "sign-in-toggle-mode"
+- waitForAnimationToEnd:
+    timeout: 2000
+- assertVisible: "Welcome Back"
+
+# ══════════════════════════════════════════
+# Test 6: Sign in as host and verify profile
+# ══════════════════════════════════════════
+- tapOn:
+    id: "sign-in-email-input"
+- inputText: "host1@plotrent.dev"
+- tapOn:
+    id: "sign-in-password-input"
+- inputText: "password123"
+- tapOn:
+    id: "sign-in-submit-button"
+- waitForAnimationToEnd:
+    timeout: 10000
+
+# ── Verify host profile ──
+- tapOn: "Profile"
+- waitForAnimationToEnd:
+    timeout: 5000
+- extendedWaitUntil:
+    visible: "Maria Santos"
+    timeout: 10000

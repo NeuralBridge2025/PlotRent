@@ -1,0 +1,5 @@
+# Maestro E2E Test Configuration for PlotRent
+# Run all: maestro test .maestro/flows/
+# Run one: maestro test .maestro/flows/journey-1-renter-booking.yaml
+
+appId: com.plotrent.app

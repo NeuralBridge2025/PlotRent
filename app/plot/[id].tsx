@@ -17,10 +17,9 @@ import {
   Ruler,
   Sun,
   Droplets,
-  Recycle,
+  Sprout,
   Flower2,
-  ShieldCheck,
-  MessageCircle,
+  BadgeCheck,
   RefreshCw,
 } from "lucide-react-native";
 import { usePlot } from "@/hooks/usePlot";
@@ -107,6 +106,7 @@ export default function PlotDetailsScreen() {
       >
         <Pressable
           onPress={() => router.back()}
+          testID="plot-detail-back"
           accessibilityRole="button"
           accessibilityLabel="Go back"
           className="w-10 h-10 rounded-full bg-white/80 items-center justify-center"
@@ -246,7 +246,7 @@ export default function PlotDetailsScreen() {
               value={plot.sun_exposure ?? "N/A"}
             />
             <VitalCard
-              icon={<Recycle color="#32632e" size={28} />}
+              icon={<Sprout color="#32632e" size={28} />}
               label="Soil"
               value={plot.soil_type ?? "N/A"}
             />
@@ -273,7 +273,7 @@ export default function PlotDetailsScreen() {
                 <Text className="font-manrope font-black text-xl text-on-surface">
                   Plot Passport™
                 </Text>
-                <ShieldCheck color="#4a7c44" size={32} />
+                <BadgeCheck color="#4a7c44" size={32} />
               </View>
               <View className="flex-row flex-wrap gap-2">
                 {plot.tags.map((tag) => (
@@ -307,7 +307,7 @@ export default function PlotDetailsScreen() {
         <View className="px-5 mt-8">
           <View className="bg-primary-container rounded-3xl p-6">
             <View className="flex-row items-center gap-2 mb-3">
-              <MessageCircle color="#ffffff" size={18} />
+              <MapPin color="#ffffff" size={18} />
               <Text className="font-manrope font-bold text-lg text-on-primary">
                 Host Insight
               </Text>
@@ -318,6 +318,7 @@ export default function PlotDetailsScreen() {
             </Text>
             <Pressable
               onPress={() => router.push(`/chat/${plot.host_id}`)}
+              testID="plot-detail-message-host"
               className="mt-5 py-3 border border-on-primary/30 rounded-full items-center active:bg-white/10"
             >
               <Text className="font-inter font-bold text-on-primary">
@@ -351,6 +352,7 @@ export default function PlotDetailsScreen() {
           onPress={() =>
             router.push({ pathname: "/booking", params: { plotId: plot.id } })
           }
+          testID="plot-detail-book-button"
           accessibilityRole="button"
           accessibilityLabel={`Book ${plot.title} for €${plot.price_per_month} per month`}
           className="bg-primary px-8 py-4 rounded-full shadow-lg active:opacity-90"

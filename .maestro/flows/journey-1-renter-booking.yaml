@@ -1,0 +1,73 @@
+appId: com.plotrent.app
+name: "Journey 1: Renter Discovery & Booking"
+tags:
+  - renter
+  - booking
+  - critical
+---
+# ── Auth: Launch and sign in as renter ──
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible:
+        id: "onboarding-screen"
+    timeout: 30000
+- openLink: "plotrent://dev-login?email=renter1@plotrent.dev&password=password123"
+- tapOn:
+    text: "Open"
+    optional: true
+- extendedWaitUntil:
+    visible:
+        id: "plot-card-aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
+    timeout: 20000
+
+# ── Tap The Secret Garden plot card ──
+- tapOn:
+    point: "50%,40%"
+- waitForAnimationToEnd:
+    timeout: 5000
+
+# ── Verify plot details ──
+- assertVisible: "Plot Vitality"
+- assertVisible: "Hosted by"
+- assertVisible: "Maria Santos"
+
+# ── Book This Plot ──
+- tapOn:
+    id: "plot-detail-book-button"
+- waitForAnimationToEnd:
+    timeout: 3000
+
+# ── Verify booking screen ──
+- assertVisible: "Review your rental"
+- assertVisible: "Price Breakdown"
+- assertVisible: "Monthly Rental"
+- assertVisible: "Platform Service Fee"
+- assertVisible: "Insurance Add-on"
+- assertVisible: "Security Deposit"
+- assertVisible: "Total"
+
+# ── Toggle insurance off then on ──
+- tapOn:
+    id: "booking-insurance-switch"
+- waitForAnimationToEnd
+- tapOn:
+    id: "booking-insurance-switch"
+- waitForAnimationToEnd
+
+# ── Confirm & Pay ──
+- scrollUntilVisible:
+    element: "Confirm & Pay"
+    direction: DOWN
+- tapOn:
+    id: "booking-confirm-button"
+- waitForAnimationToEnd:
+    timeout: 8000
+
+# ── Verify success ──
+- assertVisible:
+    text: "Booking Confirmed!"
+    optional: true
+- tapOn:
+    text: "View Profile"
+    optional: true

@@ -1,34 +1,70 @@
-export interface Plot {
-  id: string;
-  title: string;
-  price: number;
-  size: string;
-  distance: string;
-  rating: number;
-  image: string;
-  tags: string[];
-  host: string;
-  location: string;
-  description?: string;
-  soilType?: string;
-  exposure?: string;
-  utilities?: string[];
+import type {
+  PlotRow,
+  Booking,
+  MessageRow,
+  ServiceRow,
+  Profile,
+  Review,
+} from "@/lib/database.types";
+
+// Re-export database row types for convenience
+export type { Profile, Booking, Review };
+
+// Enriched plot type with computed fields for UI display
+export interface Plot extends PlotRow {
+  host_name?: string;
+  host_avatar?: string;
+  distance_km?: number;
 }
 
-export interface Service {
-  id: string;
-  title: string;
-  price: number;
-  description: string;
-  image: string;
-  tag: string;
-  unit?: string;
+// Message with sender profile info
+export interface Message extends MessageRow {
+  sender_name?: string;
+  sender_avatar?: string;
 }
 
-export interface Message {
+// Service with display-friendly fields
+export interface Service extends ServiceRow {
+  // Additional UI fields can be added here
+}
+
+// Conversation preview for chat list
+export interface Conversation {
   id: string;
-  sender: 'host' | 'user';
-  text?: string;
-  image?: string;
-  timestamp: string;
+  other_user: {
+    id: string;
+    name: string;
+    avatar_url: string | null;
+  };
+  last_message: string | null;
+  last_message_at: string;
+  unread_count: number;
+  plot_title: string | null;
+}
+
+// Booking with related plot and user info
+export interface BookingWithDetails extends Booking {
+  plot: PlotRow;
+  renter: Profile;
+}
+
+// Host dashboard stats
+export interface HostStats {
+  monthly_earnings: number;
+  earnings_trend: number;
+  active_plots: number;
+  occupancy_rate: number;
+}
+
+// Filter options for Explore screen
+export interface PlotFilters {
+  min_price?: number;
+  max_price?: number;
+  min_size?: number;
+  max_size?: number;
+  max_distance_km?: number;
+  soil_type?: string;
+  sun_exposure?: string;
+  tags?: string[];
+  instant_book?: boolean;
 }

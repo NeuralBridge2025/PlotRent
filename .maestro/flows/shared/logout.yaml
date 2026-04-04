@@ -1,0 +1,21 @@
+appId: com.plotrent.app
+name: "Shared: Logout"
+---
+- tapOn: "PROFILE"
+- waitForAnimationToEnd
+
+- scrollUntilVisible:
+    element: "Sign Out"
+    direction: DOWN
+
+- tapOn:
+    id: "profile-sign-out"
+- waitForAnimationToEnd
+
+# Confirm the alert dialog
+- tapOn:
+    text: "Sign Out"
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Find your patch"

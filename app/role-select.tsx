@@ -4,7 +4,6 @@ import {
   Text,
   Pressable,
   ActivityIndicator,
-  Alert,
 } from "react-native";
 import { router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -16,6 +15,7 @@ import {
   Check,
 } from "lucide-react-native";
 import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/contexts/ToastContext";
 import { updateProfileRole } from "@/services/profileService";
 
 type UserRole = "renter" | "host" | "both";
@@ -65,6 +65,7 @@ const ROLE_OPTIONS: RoleOption[] = [
 export default function RoleSelectScreen() {
   const insets = useSafeAreaInsets();
   const { user, profile, refreshProfile } = useAuth();
+  const { showToast } = useToast();
   const [selected, setSelected] = useState<UserRole>(
     profile?.role ?? "renter"
   );
@@ -81,11 +82,11 @@ export default function RoleSelectScreen() {
     } catch (err) {
       const message =
         err instanceof Error ? err.message : "Failed to update role";
-      Alert.alert("Error", message);
+      showToast(message, "error");
     } finally {
       setIsSubmitting(false);
     }
-  }, [user, selected, refreshProfile]);
+  }, [user, selected, refreshProfile, showToast]);
 
   return (
     <View className="flex-1 bg-surface">
@@ -119,6 +120,7 @@ export default function RoleSelectScreen() {
               <Pressable
                 key={option.role}
                 onPress={() => setSelected(option.role)}
+                testID={`role-option-${option.role}`}
                 className={`rounded-2xl border-2 p-5 flex-row items-center gap-4 ${
                   isActive
                     ? option.activeClass
@@ -156,6 +158,7 @@ export default function RoleSelectScreen() {
       >
         <Pressable
           onPress={handleConfirm}
+          testID="role-select-continue"
           disabled={isSubmitting}
           className={`py-5 rounded-full flex-row items-center justify-center gap-2 ${
             isSubmitting ? "bg-outline/30" : "bg-primary active:opacity-90"

@@ -55,7 +55,7 @@ insert into public.plots (id, host_id, title, description, price_per_month, size
   'Loamy', 'Full Sun',
   array['Water Access', 'Toolshed'],
   array['Organic Certified', 'Beginner Friendly'],
-  array[]::text[],
+  array['https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600', 'https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?w=600'],
   4.9, 12, true, true
 ),
 (
@@ -68,7 +68,7 @@ insert into public.plots (id, host_id, title, description, price_per_month, size
   'Clay Loam', 'Full Sun',
   array['Water Access', 'Compost'],
   array['Rooftop', 'City Views'],
-  array[]::text[],
+  array['https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=600', 'https://images.unsplash.com/photo-1592150621744-aca64f48394a?w=600'],
   4.7, 8, true, false
 ),
 (
@@ -81,7 +81,7 @@ insert into public.plots (id, host_id, title, description, price_per_month, size
   'Sandy Loam', 'Partial Shade',
   array['Water Access', 'Fencing'],
   array['Riverside', 'Large Plot'],
-  array[]::text[],
+  array['https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?w=600', 'https://images.unsplash.com/photo-1574943320219-553eb213f72d?w=600'],
   4.5, 5, true, true
 ),
 (
@@ -94,7 +94,7 @@ insert into public.plots (id, host_id, title, description, price_per_month, size
   'Peaty', 'Partial Shade',
   array['Water Access', 'Electricity'],
   array['Mountain', 'Spring Water', 'Child-Friendly'],
-  array[]::text[],
+  array['https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=600', 'https://images.unsplash.com/photo-1591857177580-dc82b9ac4e1e?w=600'],
   4.8, 15, true, false
 ),
 (
@@ -107,7 +107,7 @@ insert into public.plots (id, host_id, title, description, price_per_month, size
   'Sandy', 'Full Sun',
   array['Water Access', 'Toolshed', 'Compost'],
   array['Coastal', 'Organic Certified'],
-  array[]::text[],
+  array['https://images.unsplash.com/photo-1563514227147-6d2ff665a6a0?w=600', 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=600'],
   4.6, 9, true, true
 ),
 (
@@ -120,7 +120,7 @@ insert into public.plots (id, host_id, title, description, price_per_month, size
   'Clay', 'Full Sun',
   array['Water Access', 'Compost', 'Fencing', 'Electricity'],
   array['Community Garden', 'Workshops', 'Beginner Friendly', 'Child-Friendly'],
-  array[]::text[],
+  array['https://images.unsplash.com/photo-1592150621744-aca64f48394a?w=600', 'https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?w=600'],
   4.4, 22, true, true
 );
 

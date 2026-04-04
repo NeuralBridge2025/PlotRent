@@ -1,5 +1,5 @@
 import { supabase } from "@/lib/supabase";
-import type { Message } from "@/types";
+import type { Message, Conversation } from "@/types";
 
 /**
  * Fetch messages between the current user and another user, newest last.
@@ -62,6 +62,33 @@ export async function sendMessage(
     sender_name: undefined,
     sender_avatar: undefined,
   } as Message;
+}
+
+/**
+ * Fetch conversation list for a user (distinct partners with last message).
+ */
+export async function fetchConversations(
+  userId: string
+): Promise<Conversation[]> {
+  const { data, error } = await supabase.rpc("get_conversations", {
+    p_user_id: userId,
+  });
+
+  if (error) throw error;
+  if (!data) return [];
+
+  return data.map((row) => ({
+    id: row.conversation_id,
+    other_user: {
+      id: row.other_user_id,
+      name: row.other_user_name ?? "Unknown",
+      avatar_url: row.other_user_avatar,
+    },
+    last_message: row.last_message,
+    last_message_at: row.last_message_at,
+    unread_count: Number(row.unread_count),
+    plot_title: null,
+  }));
 }
 
 /**

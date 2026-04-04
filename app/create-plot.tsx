@@ -7,7 +7,6 @@ import {
   TextInput,
   Switch,
   ActivityIndicator,
-  Alert,
   Image,
 } from "react-native";
 import { router } from "expo-router";
@@ -21,6 +20,7 @@ import {
   Plus,
 } from "lucide-react-native";
 import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/contexts/ToastContext";
 import { createPlot } from "@/services/plotService";
 import { pickImage, uploadPlotImage } from "@/services/imageService";
 
@@ -117,6 +117,7 @@ function MultiChipSelect({ options, selected, onToggle }: MultiChipSelectProps) 
 export default function CreatePlotScreen() {
   const insets = useSafeAreaInsets();
   const { user } = useAuth();
+  const { showToast } = useToast();
 
   // Form state
   const [title, setTitle] = useState("");
@@ -140,9 +141,9 @@ export default function CreatePlotScreen() {
       }
     } catch (err) {
       const message = err instanceof Error ? err.message : "Failed to pick image";
-      Alert.alert("Error", message);
+      showToast(message, "error");
     }
-  }, []);
+  }, [showToast]);
 
   const handleRemoveImage = useCallback((index: number) => {
     setImageUris((prev) => prev.filter((_, i) => i !== index));
@@ -170,11 +171,11 @@ export default function CreatePlotScreen() {
     const size = parseFloat(sizeText);
 
     if (isNaN(price) || price <= 0) {
-      Alert.alert("Invalid Price", "Please enter a valid monthly price.");
+      showToast("Please enter a valid monthly price.", "error");
       return;
     }
     if (isNaN(size) || size <= 0) {
-      Alert.alert("Invalid Size", "Please enter a valid plot size.");
+      showToast("Please enter a valid plot size.", "error");
       return;
     }
 
@@ -205,13 +206,12 @@ export default function CreatePlotScreen() {
         instant_book: instantBook,
       });
 
-      Alert.alert("Plot Listed!", "Your plot is now live on PlotRent.", [
-        { text: "View Dashboard", onPress: () => router.replace("/(tabs)/host") },
-      ]);
+      showToast("Your plot is now live on PlotRent!", "success");
+      router.replace("/(tabs)/host");
     } catch (err) {
       const message =
         err instanceof Error ? err.message : "Failed to create plot";
-      Alert.alert("Error", message);
+      showToast(message, "error");
     } finally {
       setIsSubmitting(false);
     }
@@ -229,6 +229,7 @@ export default function CreatePlotScreen() {
     utilities,
     instantBook,
     imageUris,
+    showToast,
   ]);
 
   return (
@@ -308,6 +309,7 @@ export default function CreatePlotScreen() {
           <TextInput
             value={title}
             onChangeText={setTitle}
+            testID="create-plot-title-input"
             placeholder="e.g. The Sunny Terrace Plot"
             placeholderTextColor="#7a757f"
             className="bg-surface-container-low rounded-xl py-3.5 px-4 text-sm font-inter text-on-surface"
@@ -318,6 +320,7 @@ export default function CreatePlotScreen() {
           <TextInput
             value={description}
             onChangeText={setDescription}
+            testID="create-plot-description-input"
             placeholder="Tell renters what makes your plot special..."
             placeholderTextColor="#7a757f"
             multiline
@@ -333,6 +336,7 @@ export default function CreatePlotScreen() {
               <TextInput
                 value={priceText}
                 onChangeText={setPriceText}
+                testID="create-plot-price-input"
                 placeholder="45"
                 placeholderTextColor="#7a757f"
                 keyboardType="decimal-pad"
@@ -345,6 +349,7 @@ export default function CreatePlotScreen() {
               <TextInput
                 value={sizeText}
                 onChangeText={setSizeText}
+                testID="create-plot-size-input"
                 placeholder="25"
                 placeholderTextColor="#7a757f"
                 keyboardType="decimal-pad"
@@ -367,6 +372,7 @@ export default function CreatePlotScreen() {
             <TextInput
               value={address}
               onChangeText={setAddress}
+              testID="create-plot-address-input"
               placeholder="Street address"
               placeholderTextColor="#7a757f"
               className="flex-1 py-3.5 px-3 text-sm font-inter text-on-surface"
@@ -378,6 +384,7 @@ export default function CreatePlotScreen() {
           <TextInput
             value={city}
             onChangeText={setCity}
+            testID="create-plot-city-input"
             placeholder="e.g. Lisbon"
             placeholderTextColor="#7a757f"
             className="bg-surface-container-low rounded-xl py-3.5 px-4 text-sm font-inter text-on-surface"
@@ -430,6 +437,7 @@ export default function CreatePlotScreen() {
           <Switch
             value={instantBook}
             onValueChange={setInstantBook}
+            testID="create-plot-instant-book-switch"
             trackColor={{ false: "#cac4cf", true: "#32632e" }}
             thumbColor="#ffffff"
           />
@@ -438,6 +446,7 @@ export default function CreatePlotScreen() {
         {/* Submit */}
         <Pressable
           onPress={handleSubmit}
+          testID="create-plot-publish-button"
           disabled={!isValid || isSubmitting}
           className={`py-5 rounded-full flex-row items-center justify-center gap-2 mb-4 ${
             isValid && !isSubmitting

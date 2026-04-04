@@ -11,7 +11,7 @@ import Animated, {
   Easing,
   FadeIn,
 } from "react-native-reanimated";
-import { Sprout, Mountain } from "lucide-react-native";
+import { Flower, Mountain } from "lucide-react-native";
 import { useAuth } from "@/contexts/AuthContext";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -90,7 +90,7 @@ export default function Onboarding() {
   }
 
   return (
-    <View className="flex-1">
+    <View className="flex-1" testID="onboarding-screen">
       <LinearGradient
         colors={["rgba(50, 99, 46, 0.85)", "rgba(28, 28, 25, 0.95)"]}
         locations={[0, 0.7]}
@@ -129,27 +129,33 @@ export default function Onboarding() {
           {/* CTA Buttons */}
           <Animated.View style={buttonsStyle} className="gap-4 mb-8">
             <AnimatedPressable
-              onPress={() => router.push("/(tabs)")}
+              onPress={() => router.replace("/(tabs)")}
+              testID="onboarding-grow-button"
               accessibilityRole="button"
               accessibilityLabel="I want to grow — find garden plots to rent"
-              className="h-16 rounded-full bg-primary flex-row items-center justify-center gap-3 shadow-2xl active:opacity-90"
+              className="rounded-full bg-primary shadow-2xl active:opacity-90"
             >
-              <Sprout color="#ffffff" size={24} />
-              <Text className="font-manrope text-lg font-bold text-white">
-                I want to grow
-              </Text>
+              <View className="h-14 flex-row items-center justify-center gap-3">
+                <Flower color="#ffffff" size={20} />
+                <Text className="font-inter text-base font-bold text-white">
+                  I want to grow
+                </Text>
+              </View>
             </AnimatedPressable>
 
             <AnimatedPressable
-              onPress={() => router.push("/(tabs)")}
+              onPress={() => router.replace("/(tabs)/host")}
+              testID="onboarding-share-button"
               accessibilityRole="button"
               accessibilityLabel="I have land to share — list your garden plots"
-              className="h-16 rounded-full bg-secondary flex-row items-center justify-center gap-3 shadow-xl active:opacity-90"
+              className="rounded-full bg-secondary shadow-xl active:opacity-90"
             >
-              <Mountain color="#ffffff" size={24} />
-              <Text className="font-manrope text-lg font-bold text-white">
-                I have land to share
-              </Text>
+              <View className="h-14 flex-row items-center justify-center gap-3">
+                <Mountain color="#ffffff" size={20} />
+                <Text className="font-inter text-base font-bold text-white">
+                  I have land to share
+                </Text>
+              </View>
             </AnimatedPressable>
           </Animated.View>
 

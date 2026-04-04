@@ -1,0 +1,36 @@
+appId: com.plotrent.app
+name: "Shared: Login as Renter via UI"
+---
+- launchApp:
+    clearState: true
+- waitForAnimationToEnd:
+    timeout: 3000
+
+# ── Navigate to Profile tab to reach Sign In ──
+- tapOn: "Profile"
+- waitForAnimationToEnd:
+    timeout: 3000
+
+# ── Tap Sign In button on unauthenticated profile screen ──
+- assertVisible: "Join PlotRent"
+- tapOn: "Sign In"
+- waitForAnimationToEnd:
+    timeout: 3000
+
+# ── Fill in credentials ──
+- assertVisible: "Welcome Back"
+- tapOn:
+    id: "sign-in-email-input"
+- inputText: "renter1@plotrent.dev"
+- tapOn:
+    id: "sign-in-password-input"
+- inputText: "password123"
+
+# ── Submit ──
+- tapOn:
+    id: "sign-in-submit-button"
+- waitForAnimationToEnd:
+    timeout: 10000
+
+# ── Verify redirect to tabs ──
+- assertVisible: "Available Plots"

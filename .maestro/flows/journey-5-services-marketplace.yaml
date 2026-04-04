@@ -1,0 +1,47 @@
+appId: com.plotrent.app
+name: "Journey 5: Services Marketplace"
+tags:
+  - services
+  - marketplace
+---
+# ── Auth: Launch and sign in as renter ──
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible:
+        id: "onboarding-screen"
+    timeout: 30000
+- openLink: "plotrent://dev-login?email=renter1@plotrent.dev&password=password123"
+- tapOn:
+    text: "Open"
+    optional: true
+- waitForAnimationToEnd:
+    timeout: 10000
+
+# ── Navigate to services via deep link ──
+- openLink: "plotrent://services"
+- tapOn:
+    text: "Open"
+    optional: true
+- waitForAnimationToEnd:
+    timeout: 5000
+
+# ── Verify services screen ──
+- extendedWaitUntil:
+    visible: "Grow Better."
+    timeout: 10000
+- assertVisible: "All Services"
+
+# ── Filter categories ──
+- tapOn: "Tools"
+- waitForAnimationToEnd:
+    timeout: 2000
+- tapOn: "Consulting"
+- waitForAnimationToEnd:
+    timeout: 2000
+- tapOn: "Maintenance"
+- waitForAnimationToEnd:
+    timeout: 2000
+- tapOn: "All Services"
+- waitForAnimationToEnd:
+    timeout: 2000

@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo } from "react";
 import {
   View,
   Text,
@@ -7,7 +7,6 @@ import {
   Image,
   ActivityIndicator,
   Switch,
-  Alert,
 } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -16,13 +15,14 @@ import {
   Calendar,
   User,
   HelpCircle,
-  ShieldCheck,
+  BadgeCheck,
   ArrowRight,
   Leaf,
   RefreshCw,
 } from "lucide-react-native";
 import { usePlot } from "@/hooks/usePlot";
 import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/contexts/ToastContext";
 import { createBooking } from "@/services/bookingService";
 import { createPaymentIntent } from "@/services/paymentService";
 
@@ -38,6 +38,7 @@ export default function BookingReviewScreen() {
   const { plotId } = useLocalSearchParams<{ plotId: string }>();
   const insets = useSafeAreaInsets();
   const { user } = useAuth();
+  const { showToast } = useToast();
   const { plot, isLoading, error, refresh } = usePlot(plotId);
   const [insurance, setInsurance] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -217,6 +218,7 @@ export default function BookingReviewScreen() {
                 <Switch
                   value={insurance}
                   onValueChange={setInsurance}
+                  testID="booking-insurance-switch"
                   trackColor={{ false: "#cac4cf", true: "#32632e" }}
                   thumbColor="#ffffff"
                   accessibilityLabel="Insurance add-on, covers crop damage and theft"
@@ -261,7 +263,7 @@ export default function BookingReviewScreen() {
         {/* Trust Block */}
         <View className="bg-surface-container-lowest border border-outline-variant/30 rounded-2xl p-5 flex-row gap-4 items-start mb-8">
           <View className="bg-primary/10 p-2 rounded-xl">
-            <ShieldCheck color="#32632e" size={24} />
+            <BadgeCheck color="#32632e" size={24} />
           </View>
           <View className="flex-1">
             <Text className="font-inter font-bold text-sm text-on-surface leading-tight">
@@ -276,6 +278,7 @@ export default function BookingReviewScreen() {
 
         {/* Confirm Button */}
         <Pressable
+          testID="booking-confirm-button"
           onPress={async () => {
             if (!user || !plot || !pricing) return;
 
@@ -310,14 +313,11 @@ export default function BookingReviewScreen() {
                 // Payment can be retried from the profile/bookings screen
               }
 
-              Alert.alert(
-                "Booking Confirmed!",
-                `Your rental of "${plot.title}" has been booked. Check your profile for details.`,
-                [{ text: "View Profile", onPress: () => router.replace("/(tabs)/profile") }]
-              );
+              showToast(`Your rental of "${plot.title}" has been booked!`, "success");
+              router.replace("/(tabs)/profile");
             } catch (err) {
               const message = err instanceof Error ? err.message : "Booking failed";
-              Alert.alert("Error", message);
+              showToast(message, "error");
             } finally {
               setIsSubmitting(false);
             }

@@ -29,12 +29,14 @@ interface MenuItemProps {
   label: string;
   onPress: () => void;
   destructive?: boolean;
+  testID?: string;
 }
 
-function MenuItem({ icon, label, onPress, destructive }: MenuItemProps) {
+function MenuItem({ icon, label, onPress, destructive, testID }: MenuItemProps) {
   return (
     <Pressable
       onPress={onPress}
+      testID={testID}
       className="flex-row items-center py-4 px-1 active:opacity-70"
     >
       <View className="mr-3">{icon}</View>
@@ -101,7 +103,7 @@ export default function ProfileScreen() {
           Sign in to manage your plots and bookings.
         </Text>
         <Pressable
-          onPress={() => router.replace("/")}
+          onPress={() => router.push("/sign-in")}
           className="bg-primary px-8 py-4 rounded-full active:opacity-90"
         >
           <Text className="font-manrope font-bold text-lg text-white">
@@ -271,11 +273,13 @@ export default function ProfileScreen() {
             <MenuItem
               icon={<Sprout color="#32632e" size={20} />}
               label="Switch Role"
+              testID="profile-switch-role"
               onPress={() => router.push("/role-select")}
             />
             <MenuItem
               icon={<LogOut color="#a03f29" size={20} />}
               label="Sign Out"
+              testID="profile-sign-out"
               onPress={handleSignOut}
               destructive
             />

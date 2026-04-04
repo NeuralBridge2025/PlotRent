@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
   RefreshControl,
 } from "react-native";
-import Animated, { FadeInDown, FadeInRight } from "react-native-reanimated";
+import Animated, { FadeInDown } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import {
@@ -106,6 +106,34 @@ export default function HostDashboardScreen() {
   }, [refresh]);
 
   const firstName = profile?.full_name?.split(" ")[0] ?? "Host";
+
+  // Not signed in
+  if (!user) {
+    return (
+      <View
+        className="flex-1 bg-surface items-center justify-center px-6"
+        style={{ paddingTop: insets.top }}
+      >
+        <View className="w-16 h-16 rounded-2xl bg-primary/10 items-center justify-center mb-4">
+          <LayoutList color="#32632e" size={32} />
+        </View>
+        <Text className="font-manrope text-2xl font-bold text-on-surface mb-2 text-center">
+          Manage Your Plots
+        </Text>
+        <Text className="font-inter text-base text-on-surface-variant text-center mb-6">
+          Sign in to list your land and track earnings.
+        </Text>
+        <Pressable
+          onPress={() => router.push("/sign-in")}
+          className="bg-primary px-8 py-4 rounded-full active:opacity-90"
+        >
+          <Text className="font-manrope font-bold text-lg text-white">
+            Sign In
+          </Text>
+        </Pressable>
+      </View>
+    );
+  }
 
   // Loading
   if (isLoading && !refreshing) {
@@ -251,7 +279,7 @@ export default function HostDashboardScreen() {
             <Text className="font-manrope font-bold text-xl mb-2">
               Host Insights
             </Text>
-            <Text className="font-inter text-sm text-on-surface-variant leading-relaxed">
+            <Text className="font-inter text-sm text-on-surface-variant leading-relaxed mb-4">
               {plots.length > 0
                 ? `Your "${plots[0].title}" is performing well. Consider adjusting pricing for peak season.`
                 : "List your first plot to start earning from your land."}
@@ -314,6 +342,7 @@ export default function HostDashboardScreen() {
       {/* Floating Action Button */}
       <Pressable
         onPress={() => router.push("/create-plot")}
+        testID="host-fab-create-plot"
         className="absolute right-6 w-14 h-14 bg-secondary rounded-full shadow-lg items-center justify-center active:opacity-90"
         style={{ bottom: insets.bottom + 88 }}
       >

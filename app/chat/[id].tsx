@@ -243,6 +243,7 @@ export default function ChatScreen() {
         <TextInput
           value={input}
           onChangeText={setInput}
+          testID="chat-message-input"
           placeholder={`Message ${partnerFirstName}...`}
           placeholderTextColor="#7a757f"
           accessibilityLabel={`Type a message to ${partnerFirstName}`}
@@ -253,6 +254,7 @@ export default function ChatScreen() {
         />
         <Pressable
           onPress={handleSend}
+          testID="chat-send-button"
           accessibilityRole="button"
           accessibilityLabel="Send message"
           className="w-11 h-11 items-center justify-center bg-primary rounded-full shadow-md active:opacity-90"

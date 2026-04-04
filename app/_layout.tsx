@@ -22,6 +22,8 @@ function RootNavigator() {
         <Stack.Screen name="booking" />
         <Stack.Screen name="create-plot" />
         <Stack.Screen name="services" />
+        <Stack.Screen name="sign-in" />
+        <Stack.Screen name="dev-login" />
       </Stack>
     </>
   );

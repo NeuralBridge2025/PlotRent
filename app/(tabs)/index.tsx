@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import {
   View,
   Text,
@@ -12,22 +12,36 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import {
   Bell,
-  Settings2,
+  SlidersHorizontal,
   Sprout,
   RefreshCw,
 } from "lucide-react-native";
+import { useAuth } from "@/contexts/AuthContext";
 import { usePlots } from "@/hooks/usePlots";
 import PlotCard from "@/components/PlotCard";
+import FilterModal from "@/components/FilterModal";
+import LeafletMap from "@/components/LeafletMap";
 import type { Plot, PlotFilters } from "@/types";
 
-const FILTER_CHIPS = ["Distance", "Plot Size", "Price Range", "Instant Book"];
 
 export default function ExploreScreen() {
   const insets = useSafeAreaInsets();
-  const [activeFilter, setActiveFilter] = useState<string | null>(null);
-  const [filters] = useState<PlotFilters | undefined>(undefined);
-  const { plots, isLoading, error, refresh } = usePlots(filters);
+  const { isAuthenticated } = useAuth();
+  const [filters, setFilters] = useState<PlotFilters>({});
+  const [filterModalVisible, setFilterModalVisible] = useState(false);
+
+  // Only pass filters to the hook when at least one is set
+  const activeFilters = useMemo(() => {
+    const hasAny = Object.values(filters).some((v) => v != null);
+    return hasAny ? filters : undefined;
+  }, [filters]);
+
+  const { plots, isLoading, error, refresh } = usePlots(activeFilters);
   const [refreshing, setRefreshing] = useState(false);
+
+  const activeFilterCount = Object.values(filters).filter(
+    (v) => v != null && v !== false
+  ).length;
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -36,12 +50,16 @@ export default function ExploreScreen() {
   }, [refresh]);
 
   const handlePlotPress = useCallback((id: string) => {
+    if (!isAuthenticated) {
+      router.push("/sign-in");
+      return;
+    }
     router.push(`/plot/${id}`);
-  }, []);
+  }, [isAuthenticated]);
 
   const renderPlotCard = useCallback(
     ({ item, index }: { item: Plot; index: number }) => (
-      <View className="px-6 mb-6">
+      <View className="px-6 mb-4">
         <PlotCard plot={item} index={index} onPress={handlePlotPress} />
       </View>
     ),
@@ -52,53 +70,120 @@ export default function ExploreScreen() {
 
   const ListHeader = (
     <>
+      {/* Map */}
+      {!isLoading && plots.length > 0 && (
+        <View className="px-4 pt-2 pb-2">
+          <LeafletMap plots={plots} onPlotPress={handlePlotPress} />
+        </View>
+      )}
+
       {/* Filter Bar */}
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
         className="px-6 py-4"
-        contentContainerStyle={{ gap: 10 }}
+        contentContainerStyle={{ gap: 10, alignItems: "center" }}
       >
-        <Pressable className="bg-primary-container px-5 py-2.5 rounded-full flex-row items-center gap-2">
-          <Settings2 color="#ffffff" size={16} />
+        <Pressable
+          onPress={() => setFilterModalVisible(true)}
+          accessibilityRole="button"
+          accessibilityLabel={`Open filters${activeFilterCount > 0 ? `, ${activeFilterCount} active` : ""}`}
+          className="bg-primary-container px-3 rounded-full flex-row items-center gap-1.5"
+          style={{ height: 34 }}
+        >
+          <SlidersHorizontal color="#ffffff" size={14} strokeWidth={2.5} />
           <Text className="text-white text-sm font-semibold font-inter">
-            Filters
+            Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
           </Text>
         </Pressable>
-        {FILTER_CHIPS.map((chip) => (
-          <Pressable
-            key={chip}
-            onPress={() =>
-              setActiveFilter(activeFilter === chip ? null : chip)
-            }
-            accessibilityRole="button"
-            accessibilityLabel={`Filter by ${chip}`}
-            accessibilityState={{ selected: activeFilter === chip }}
-            className={`px-5 py-2.5 rounded-full ${
-              activeFilter === chip
-                ? "bg-primary"
-                : "bg-surface-container-highest"
+        <Pressable
+          onPress={() => {
+            const next = filters.instant_book ? undefined : true;
+            setFilters((prev) => ({ ...prev, instant_book: next }));
+          }}
+          accessibilityRole="button"
+          accessibilityLabel="Toggle instant book filter"
+          accessibilityState={{ selected: filters.instant_book === true }}
+          className={`px-3 py-2 rounded-full justify-center ${
+            filters.instant_book ? "bg-primary" : "bg-surface-container-highest"
+          }`}
+        >
+          <Text
+            className={`text-sm font-medium font-inter ${
+              filters.instant_book ? "text-white" : "text-on-surface"
             }`}
           >
-            <Text
-              className={`text-sm font-medium font-inter ${
-                activeFilter === chip ? "text-white" : "text-on-surface"
-              }`}
-            >
-              {chip}
-            </Text>
-          </Pressable>
-        ))}
+            Instant Book
+          </Text>
+        </Pressable>
+        <Pressable
+          onPress={() => setFilterModalVisible(true)}
+          accessibilityRole="button"
+          accessibilityLabel="Filter by price range"
+          className={`px-3 py-2 rounded-full justify-center ${
+            filters.min_price != null || filters.max_price != null
+              ? "bg-primary"
+              : "bg-surface-container-highest"
+          }`}
+        >
+          <Text
+            className={`text-sm font-medium font-inter ${
+              filters.min_price != null || filters.max_price != null
+                ? "text-white"
+                : "text-on-surface"
+            }`}
+          >
+            Price Range
+          </Text>
+        </Pressable>
+        <Pressable
+          onPress={() => setFilterModalVisible(true)}
+          accessibilityRole="button"
+          accessibilityLabel="Filter by plot size"
+          className={`px-3 py-2 rounded-full justify-center ${
+            filters.min_size != null || filters.max_size != null
+              ? "bg-primary"
+              : "bg-surface-container-highest"
+          }`}
+        >
+          <Text
+            className={`text-sm font-medium font-inter ${
+              filters.min_size != null || filters.max_size != null
+                ? "text-white"
+                : "text-on-surface"
+            }`}
+          >
+            Plot Size
+          </Text>
+        </Pressable>
+        <Pressable
+          onPress={() => setFilterModalVisible(true)}
+          accessibilityRole="button"
+          accessibilityLabel="Filter by soil type"
+          className={`px-3 py-2 rounded-full justify-center ${
+            filters.soil_type != null
+              ? "bg-primary"
+              : "bg-surface-container-highest"
+          }`}
+        >
+          <Text
+            className={`text-sm font-medium font-inter ${
+              filters.soil_type != null ? "text-white" : "text-on-surface"
+            }`}
+          >
+            {filters.soil_type ?? "Soil Type"}
+          </Text>
+        </Pressable>
       </ScrollView>
 
       {/* Results Header */}
-      <View className="px-6 pb-4 flex-row justify-between items-baseline">
-        <Text className="font-manrope font-bold text-2xl text-primary tracking-tight">
+      <View className="px-6 pb-4">
+        <Text className="font-manrope font-bold text-lg text-primary tracking-tight">
           Available Plots
         </Text>
         {!isLoading && !error && (
-          <Text className="text-sm text-on-surface-variant font-inter">
-            {plots.length} {plots.length === 1 ? "result" : "results"}
+          <Text className="text-sm text-on-surface-variant font-inter mt-1">
+            {plots.length} {plots.length === 1 ? "result" : "results"} near you
           </Text>
         )}
       </View>
@@ -179,11 +264,16 @@ export default function ExploreScreen() {
         maxToRenderPerBatch={6}
         windowSize={5}
         initialNumToRender={4}
-        getItemLayout={(_, index) => ({
-          length: 300,
-          offset: 300 * index,
-          index,
-        })}
+      />
+
+      <FilterModal
+        visible={filterModalVisible}
+        filters={filters}
+        onApply={(next) => {
+          setFilters(next);
+          setFilterModalVisible(false);
+        }}
+        onClose={() => setFilterModalVisible(false)}
       />
     </View>
   );

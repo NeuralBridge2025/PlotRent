@@ -1,0 +1,16 @@
+appId: com.plotrent.app
+name: "Shared: Login as Host"
+---
+- launchApp:
+    clearState: true
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- openLink: "plotrent://dev-login?email=host1@plotrent.dev&password=password123"
+
+# iOS shows system dialog "Open in PlotRent?"
+- tapOn:
+    text: "Open"
+    optional: true
+- waitForAnimationToEnd:
+    timeout: 8000
