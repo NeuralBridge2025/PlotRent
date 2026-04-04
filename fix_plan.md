@@ -13,7 +13,7 @@
 - [x] **2.4** Booking Review screen (`app/booking.tsx`)
 
 ## Phase 3: Host & Communication
-- [ ] **3.1** Host Dashboard screen (`app/(tabs)/host.tsx`)
+- [x] **3.1** Host Dashboard screen (`app/(tabs)/host.tsx`)
 - [ ] **3.2** Chat screen (`app/chat/[id].tsx`)
 - [ ] **3.3** Create Plot screen (`app/create-plot.tsx`)
 
