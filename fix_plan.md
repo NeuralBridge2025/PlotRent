@@ -40,4 +40,4 @@
 - [x] **7.1** Animations (reanimated entrance/exit)
 - [x] **7.2** Error boundaries & offline handling
 - [x] **7.3** Accessibility (a11y labels, contrast)
-- [ ] **7.4** Performance (image caching, list virtualization)
+- [x] **7.4** Performance (image caching, list virtualization)
