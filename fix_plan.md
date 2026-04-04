@@ -8,7 +8,7 @@
 
 ## Phase 2: Core Navigation & Screens
 - [x] **2.1** Tab navigator layout (`app/(tabs)/_layout.tsx`)
-- [ ] **2.2** Explore screen — plot cards grid + filter bar
+- [x] **2.2** Explore screen — plot cards grid + filter bar
 - [ ] **2.3** Plot Details screen (`app/plot/[id].tsx`)
 - [ ] **2.4** Booking Review screen (`app/booking.tsx`)
 
