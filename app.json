@@ -1,0 +1,49 @@
+{
+  "expo": {
+    "name": "PlotRent",
+    "slug": "PlotRent",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "scheme": "plotrent",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#fcf9f4"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.plotrent.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#fcf9f4"
+      },
+      "edgeToEdgeEnabled": true,
+      "package": "com.plotrent.app"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/icon.png",
+          "color": "#32632e"
+        }
+      ],
+      [
+        "@stripe/stripe-react-native",
+        {
+          "merchantIdentifier": "merchant.com.plotrent",
+          "enableGooglePay": true
+        }
+      ]
+    ]
+  }
+}
