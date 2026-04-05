@@ -119,11 +119,62 @@ supabase/
 - Use `any` type
 - Import from `_reference/` directory (it's for visual reference only)
 
+## Getting Started
+
+### Prerequisites
+- **Node.js** >= 18 (project currently uses v25; Expo SDK 54 requires 18+)
+- **npm** (comes with Node)
+- **Expo CLI**: installed via `npx expo` (no global install needed)
+- **EAS CLI**: `npm install -g eas-cli` (for building dev/preview/production builds)
+- **Supabase CLI** (optional, for local backend dev): `brew install supabase/tap/supabase`
+- **iOS Simulator**: Xcode (macOS only) — install from Mac App Store, then `xcode-select --install`
+- **Android Emulator**: Android Studio with an AVD configured
+- **Expo Go** app on a physical device (for quick testing without a dev build)
+- **Maestro** (optional, for E2E tests): `brew install maestro`
+
+### Setup
+```bash
+# 1. Clone and install dependencies
+git clone <repo-url> && cd PlotRent-main
+npm install
+
+# 2. Configure environment variables
+#    Copy .env.example or create .env in the project root:
+#    EXPO_PUBLIC_SUPABASE_URL=<your-supabase-url>
+#    EXPO_PUBLIC_SUPABASE_ANON_KEY=<your-supabase-anon-key>
+
+# 3. Start the dev server
+npx expo start
+
+# 4. Run on a platform (press in terminal or use flags):
+#    i → iOS Simulator
+#    a → Android Emulator
+#    w → Web browser
+#    Scan QR code → Expo Go on physical device
+```
+
+### Dev Builds (required for native modules like Stripe, Camera, Notifications)
+Expo Go doesn't support custom native modules. You need a development build:
+```bash
+eas build --profile development --platform ios    # or android
+npx expo start --dev-client                       # start with dev client
+```
+
+### Supabase Local Development (optional)
+```bash
+supabase start                          # Starts local Supabase (Docker required)
+supabase db reset                       # Applies migrations + seed data
+supabase functions serve                # Runs Edge Functions locally
+```
+When running locally, update `.env` to point to `http://127.0.0.1:54321` and the local anon key printed by `supabase start`.
+
 ## Common Commands
 ```bash
 npx expo start                          # Dev server
+npx expo start --dev-client             # Dev server (dev build with native modules)
 eas build --profile development         # Dev build (needed for native modules)
-npm test                                # Run tests
+npm test                                # Run tests (Jest)
+npm run test:e2e                        # Run all E2E tests (Maestro)
 npx tsc --noEmit                        # Type check
 npx eslint .                            # Lint (flat config, no --ext needed)
 ```
